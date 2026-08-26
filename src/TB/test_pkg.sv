@@ -1,6 +1,7 @@
 package test_pkg;
 import uvm_pkg::*;
 `include "uvm_macros.svh"
+`include "defines.svh"
 `include "seq_item.sv"
 `include "sequence.sv"
 `include "sequencer.sv"
