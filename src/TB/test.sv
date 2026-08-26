@@ -47,9 +47,9 @@ class test1 extends test;
     super.new(name,parent);
   endfunction
   
-  function void build_phase(uvm_phase phase);
-	super.build_phase(phase);
-  endfunction
+ // function void build_phase(uvm_phase phase);
+	//super.build_phase(phase);
+  //endfunction
   
   task run_phase(uvm_phase phase);
     
