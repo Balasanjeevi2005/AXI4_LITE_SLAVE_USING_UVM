@@ -64,7 +64,8 @@ class test1 extends test;
     r1.start(e_h.inp_agnt_h.sr_h);
     e1.start(e_h.inp_agnt_h.sr_h);
     c1.start(e_h.inp_agnt_h.sr_h);
-    
+
+	#50;  
     phase.drop_objection(this);
     
   endtask
