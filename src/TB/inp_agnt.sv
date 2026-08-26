@@ -25,7 +25,10 @@ class inp_agnt extends uvm_agent;
   
   function void connnect_phase(uvm_phase phase);
     super.connect_phase(phase);
-    id_h.seq_item_port.connect(sr_h.seq_item_export);
+    if(m_cfg.input_agent_is_active==UVM_ACTIVE)
+    begin
+      id_h.seq_item_port.connect(sr_h.seq_item_export);
+    end
   endfunction
   
 endclass
