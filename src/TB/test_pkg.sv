@@ -1,7 +1,6 @@
 package test_pkg;
 import uvm_pkg::*;
 `include "uvm_macros.svh"
-`include "axi4_if.sv"
 `include "seq_item.sv"
 `include "sequence.sv"
 `include "sequencer.sv"
