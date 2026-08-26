@@ -9,11 +9,11 @@ import test_pkg::*;
  module top();
    bit ACLK;
    bit ARESETn;
-   axi4_if DUV_IF(ACLK);
+   axi4_if DUV_IF(ACLK,ARESETn);
 
   //instatiate DUV
    axi4_lite_slave DUV(.ACLK(ACLK),
-                       .ARESETN(DUV_IF.ARESETn),
+                       .ARESETN(ARESETn),
                        .AWADDR(DUV_IF.AWADDR),
                        .AWPROT(DUV_IF.AWPROT),
                        .AWVALID(DUV_IF.AWVALID),
@@ -33,20 +33,26 @@ import test_pkg::*;
                        .RRESP(DUV_IF.RRESP),
                        .RVALID(DUV_IF.RVALID),
                        .RREADY(DUV_IF.RREADY));
-  
-  initial begin
-
-    uvm_config_db#(virtual axi4_if)::set(null,"*","axi4_if",DUV_IF);
-    $dumpfile("waves.fsdb");
-    $dumpvars;
-    run_test();
-		
-  end
-
-  initial begin
-    ACLK=1'b0;
-    forever 
-    #5 ACLK=~ACLK;
-  end
+   
+   initial begin
+     uvm_config_db#(virtual axi4_if)::set(null,"*","axi4_if",DUV_IF);
+     $dumpfile("waves.fsdb");
+     $dumpvars;
+     run_test();	
+   end
+   
+   initial begin
+     PRESETn=0;
+     #2 PRESETn=1;
+     #10 PRESETn=0;
+     repeat(5)@(posedge ACLK);
+     PRESETn=1;
+   end
+   
+   initial begin
+     ACLK=1'b0;
+     forever 
+       #5 ACLK=~ACLK;
+   end
 
 endmodule
