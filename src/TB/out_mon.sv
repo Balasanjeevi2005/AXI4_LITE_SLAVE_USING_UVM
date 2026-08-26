@@ -1,10 +1,10 @@
 class out_mon extends uvm_monitor;
   
   `uvm_component_utils(out_mon)
-  
+  uvm_analysis_port #(trans) out_mon_port;
   virtual axi4_if.OUT_MON vif;
   axi4_cfg c_h;
-  
+  trans t;
   function new(string name="out_mon",uvm_component parent);
     super.new(name,parent);
   endfunction
@@ -33,16 +33,17 @@ class out_mon extends uvm_monitor;
     
     repeat(3)@(vif.out_mon_cb);
     
-    t.AWREADY = vif.out_mon_cb.AWREADY;
-    t.WREADY  = vif.out_mon_cb.WREADY;
-    t.BRESP   = vif.out_mon_cb.BRESP;
-    t.BVALID  = vif.out_mon_cb.BVALID;
+    t.AWREADY <= vif.out_mon_cb.AWREADY;
+    t.WREADY  <= vif.out_mon_cb.WREADY;
+    t.BRESP   <= vif.out_mon_cb.BRESP;
+    t.BVALID  <= vif.out_mon_cb.BVALID;
     
-    t.ARREADY = vif.out_mon_cb.ARREADY;
-    t.RDATA   = vif.out_mon_cb.RDATA;
-    t.RRESP   = vif.out_mon_cb.RRESP;
-    t.RVALID  = vif.out_mon_cb.RVALID;
+    t.ARREADY <= vif.out_mon_cb.ARREADY;
+    t.RDATA   <= vif.out_mon_cb.RDATA;
+    t.RRESP   <= vif.out_mon_cb.RRESP;
+    t.RVALID  <= vif.out_mon_cb.RVALID;
     
-    out_mon_port.write(t);
-  
+    //out_mon_port.write(t);
+    
+  endtask
 endclass
