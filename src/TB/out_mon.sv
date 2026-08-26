@@ -47,7 +47,7 @@ class out_mon extends uvm_monitor;
     t.RRESP   = vif.out_mon_cb.RRESP;
     t.RVALID  = vif.out_mon_cb.RVALID;
     
-    //out_mon_port.write(t);
+    out_mon_port.write(t);
     
   endtask
 endclass
