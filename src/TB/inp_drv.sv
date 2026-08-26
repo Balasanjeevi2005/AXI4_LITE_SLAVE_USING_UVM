@@ -4,6 +4,7 @@ class inp_drv extends uvm_driver#(trans);
   
   axi4_cfg c_h;
   virtual axi4_if.IN_DRV vif;
+  trans t;
   bit a_flag=1'b0;
   bit d_flag=1'b0;
   
