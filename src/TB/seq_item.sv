@@ -1,5 +1,5 @@
 class trans extends uvm_sequence_item;
-  
+  `uvm_object_utils(trans)
   rand bit[`ADDR_WIDTH-1:0]AWADDR;
   rand bit AWVALID;
   logic AWREADY;
