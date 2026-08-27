@@ -63,7 +63,7 @@ class scoreboard extends uvm_scoreboard;
     end
     
     //check write_response
-    if(tin.BREADY)begin
+    if(tin.BREADY && tin.BVALID)begin
       
       if(tin.BRESP == tout.BRESP)
         $display("\n BRESP IS  MATCHING");
@@ -88,7 +88,7 @@ class scoreboard extends uvm_scoreboard;
     end
     
     //check read_response
-    if(tin.RREADY)begin
+    if(tin.RREADY && tin.RVALID)begin
       
       if(tin.RDATA == tout.RDATA)
         $display("\n RDATA IS  MATCHING");
