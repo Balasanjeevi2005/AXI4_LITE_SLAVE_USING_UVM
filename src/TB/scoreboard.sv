@@ -31,28 +31,84 @@ class scoreboard extends uvm_scoreboard;
       out_mon_fifo.get(out_mon_tx);
       
       ref_model(inp_mon_tx);
-      `uvm_info("reference_model",$sformatf("reference_model:\n%s",inp_mon_tx.sprint()),UVM_NONE);
+      `uvm_info("reference_model",$sformatf("reference_model:\n%s",inp_mon_tx.sprint()),UVM_HIGH);
       
-      validate_output();
+      check_Data(inp_mon_tx,out_mon_tx);
+      `uvm_info("CHECKING OUTPUT ",$sformatf("CHECKING OUTPUT\n%s",out_mon_tx.sprint()),UVM_HIGH);
       
     end
     
   endtask
   
-  virtual task validate_output();
+  virtual task check_Data(trans tin,trans tout);
     
-    if(inp_mon_tx.compare(out_mon_tx))begin
-      `uvm_info(get_type_name(),$sformatf("DATA MATCH SUCCESSFUL"),UVM_NONE)
-	end
+    //check write_addr
+    if(tin.AWVALID)begin
+      
+      if(tin.AWREADY == tout.AWREADY)
+        $display("\n AWREADY IS  MATCHING");
+      else
+        $display("\n AWREADY IS NOT MATCHING");
+      
+    end
     
-	else begin
-      `uvm_info(get_type_name(),$sformatf("DATA DISMATCH SUCCESSFUL"),UVM_NONE)
-      `uvm_info(get_type_name(),$sformatf("Expected Packet\n%s",inp_mon_tx.sprint()),UVM_NONE)
-      `uvm_info(get_type_name(),$sformatf("DUT Packet\n%s",out_mon_tx.sprint()),UVM_NONE)
-	end
+    //check write_data
+    if(tin.WVALID)begin
+      
+      if(tin.WREADY == tout.WREADY)
+        $display("\n WREADY IS  MATCHING");
+      else
+        $display("\n WREADY IS NOT MATCHING");
+      
+    end
     
-  endtask
-
+    //check write_response
+    if(tin.BREADY)begin
+      
+      if(tin.BRESP == tout.BRESP)
+        $display("\n BRESP IS  MATCHING");
+      else
+        $display("\n BRESP IS NOT MATCHING");
+      
+      if(tin.BVALID == tout.BVALID)
+        $display("\n BVALID IS  MATCHING");
+      else
+        $display("\n BVALID IS NOT MATCHING");
+      
+    end
+    
+    //check read_addr
+    if(tin.ARVALID)begin
+      
+      if(tin.ARREADY == tout.ARREADY)
+        $display("\n ARREADY IS  MATCHING");
+      else
+        $display("\n ARREADY IS NOT MATCHING");
+      
+    end
+    
+    //check read_response
+    if(tin.RREADY)begin
+      
+      if(tin.RDATA == tout.RDATA)
+        $display("\n RDATA IS  MATCHING");
+      else
+        $display("\n RDATA IS NOT MATCHING");
+      
+      if(tin.RRESP == tout.RRESP)
+        $display("\n RRESP IS  MATCHING");
+      else
+        $display("\n RRESP IS NOT MATCHING");
+      
+      if(tin.RVALID == tout.RVALID)
+        $display("\n RVALID IS  MATCHING");
+      else
+        $display("\n RVALID IS NOT MATCHING");
+      
+    end
+    
+    
+  endtask   
   virtual task ref_model(trans t);
     
     if(!t.PRESETn)begin
