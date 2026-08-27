@@ -5,8 +5,8 @@ class inp_drv extends uvm_driver#(trans);
   axi4_cfg c_h;
   virtual axi4_if.IN_DRV vif;
   trans t;
-  bit a_flag=1'b0;
-  bit d_flag=1'b0;
+  //bit a_flag=1'b0;
+  //bit d_flag=1'b0;
   
   function new(string name="inp_drv",uvm_component parent);
     super.new(name,parent);
@@ -40,13 +40,13 @@ class inp_drv extends uvm_driver#(trans);
     
     if(t.AWVALID || t.WVALID)begin
       
-      if(t.AWVALID && (!a_flag))begin
+      if(t.AWVALID)begin// && (!a_flag)
         vif.inp_drv_cb.AWADDR  <= t.AWADDR;
         vif.inp_drv_cb.AWVALID <= t.AWVALID;
         a_flag=1'b1;
       end
       
-      if(t.WVALID && (!d_flag)) begin
+      if(t.WVALID) begin//&& (!d_flag)
         vif.inp_drv_cb.WDATA   <= t.WDATA;
         vif.inp_drv_cb.WSTRB   <= t.WSTRB;
         vif.inp_drv_cb.WVALID  <= t.WVALID;
