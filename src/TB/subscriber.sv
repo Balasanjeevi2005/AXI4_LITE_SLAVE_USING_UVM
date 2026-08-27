@@ -49,6 +49,21 @@ class subscriber extends uvm_subscriber#(trans);
       bins low ={0};
       bins high={1};
     }
+
+    //RESP
+    BRESP:coverpoint t.BREADY{
+      bins OKAY  ={2'b00};
+      bins SLVERR={2'b10};
+      bins DECERR={2'b11};
+      bins other =default;
+    }
+    
+    RRESP:coverpoint t.RREADY{
+      bins OKAY  ={2'b00};
+      bins SLVERR={2'b10};
+      bins DECERR={2'b11};
+      bins other =default;
+    }
     
     W_addr_data:cross AWVALID,WVALID;
     
