@@ -43,20 +43,20 @@ class inp_drv extends uvm_driver#(trans);
       if(t.AWVALID)begin// && (!a_flag)
         vif.inp_drv_cb.AWADDR  <= t.AWADDR;
         vif.inp_drv_cb.AWVALID <= t.AWVALID;
-        a_flag=1'b1;
+        //a_flag=1'b1;
       end
       
       if(t.WVALID) begin//&& (!d_flag)
         vif.inp_drv_cb.WDATA   <= t.WDATA;
         vif.inp_drv_cb.WSTRB   <= t.WSTRB;
         vif.inp_drv_cb.WVALID  <= t.WVALID;
-        d_flag=1'b1;
+        //d_flag=1'b1;
       end
       
       if(t.BREADY && vif.inp_drv_cb.BVALID)begin
         vif.inp_drv_cb.BREADY  <= t.BREADY;
-        a_flag=1'b0;
-        d_flag=1'b0;
+        //a_flag=1'b0;
+        //d_flag=1'b0;
       end
         
     end
@@ -64,11 +64,8 @@ class inp_drv extends uvm_driver#(trans);
       vif.inp_drv_cb.ARADDR  <= t.ARADDR;
       vif.inp_drv_cb.ARVALID <= t.ARVALID;
       
-      while(!(t.RREADY && vif.inp_drv_cb.RVALID))begin
-        @(vif.inp_drv_cb);
-      end
-      
-      vif.inp_drv_cb.RREADY  <= t.RREADY;
+      if(t.RREADY && vif.inp_drv_cb.RVALID)
+        vif.inp_drv_cb.RREADY  <= t.RREADY;
     end
   endtask
   
