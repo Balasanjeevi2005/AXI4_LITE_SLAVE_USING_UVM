@@ -27,7 +27,7 @@ class inp_mon extends uvm_monitor;
   task run_phase(uvm_phase phase);
     forever begin
       collect_inp();
-      `uvm_info("INP_MON",$sformatf("INP_MON:\n%S",t.sprint()),UVM_LOW);
+      `uvm_info("INP_MON",$sformatf("INP_MON:\n%S",t.sprint()),UVM_FULL);
     end
   endtask
   
