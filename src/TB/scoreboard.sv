@@ -30,8 +30,8 @@ class scoreboard extends uvm_scoreboard;
       inp_mon_fifo.get(inp_mon_tx);
       out_mon_fifo.get(out_mon_tx);
       
-      ref_model(inp_mon_tx);
-      `uvm_info("reference_model",$sformatf("reference_model:\n%s",inp_mon_tx.sprint()),UVM_HIGH);
+      expected_output(inp_mon_tx);
+      `uvm_info("expected_output",$sformatf("expected_output:\n%s",inp_mon_tx.sprint()),UVM_HIGH);
       
       check_Data(inp_mon_tx,out_mon_tx);
       `uvm_info("CHECKING OUTPUT ",$sformatf("CHECKING OUTPUT\n%s",out_mon_tx.sprint()),UVM_HIGH);
@@ -109,7 +109,7 @@ class scoreboard extends uvm_scoreboard;
     
     
   endtask   
-  virtual task ref_model(trans t);
+  virtual task expected_output(trans t);
     
     if(!t.PRESETn)begin
       foreach (mem[i])
