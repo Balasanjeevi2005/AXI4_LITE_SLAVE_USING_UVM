@@ -27,7 +27,7 @@ class out_mon extends uvm_monitor;
   task run_phase(uvm_phase  phase);
     forever begin
       collect_out();
-      `uvm_info("out_mon",$sformatf("output monitor:\n%s",t.sprint()),UVM_LOW);
+      `uvm_info("out_mon",$sformatf("output monitor:\n%s",t.sprint()),UVM_FULL);
     end
   endtask
   
