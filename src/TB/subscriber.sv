@@ -3,62 +3,62 @@ class subscriber extends uvm_subscriber#(trans);
   
   `uvm_component_utils(subscriber)
   
-  trans t;
+  trans t1;
   
   covergroup cg;
     
-    AWADDR:coverpoint t.AWADDR{
+    AWADDR:coverpoint t1.AWADDR{
       bins w_addr={[0:$]};
     }
     
-    AWVALID:coverpoint t.AWVALID{
+    AWVALID:coverpoint t1.AWVALID{
       bins low ={0};
       bins high={1};
     }
     
-    WDATA:coverpoint t.WDATA{
+    WDATA:coverpoint t1.WDATA{
       bins all_zero={ {`DATA_WIDTH{1'b0}} };
       bins all_ones={ {`DATA_WIDTH{1'b1}} };
       bins others  = default;
     }
     
-    WVALID:coverpoint t.WVALID{
+    WVALID:coverpoint t1.WVALID{
       bins low ={0};
       bins high={1};
     }
     
-    WSTRB:coverpoint t.WSTRB{
+    WSTRB:coverpoint t1.WSTRB{
       bins strb[]={[0:$]};
     }
     
-    ARADDR:coverpoint t.ARADDR{
+    ARADDR:coverpoint t1.ARADDR{
       bins r_addr={[0:$]};
     }
     
-    ARVALID:coverpoint t.ARVALID{
+    ARVALID:coverpoint t1.ARVALID{
       bins low ={0};
       bins high={1};
     }
     
-    RREADY:coverpoint t.RREADY{
+    RREADY:coverpoint t1.RREADY{
       bins low ={0};
       bins high={1};
     }
     
-    BREADY:coverpoint t.BREADY{
+    BREADY:coverpoint t1.BREADY{
       bins low ={0};
       bins high={1};
     }
 
     //RESP
-    BRESP:coverpoint t.BREADY{
+    BRESP:coverpoint t1.BREADY{
       bins OKAY  ={2'b00};
       bins SLVERR={2'b10};
       bins DECERR={2'b11};
       bins other =default;
     }
     
-    RRESP:coverpoint t.RREADY{
+    RRESP:coverpoint t1.RREADY{
       bins OKAY  ={2'b00};
       bins SLVERR={2'b10};
       bins DECERR={2'b11};
@@ -74,8 +74,8 @@ class subscriber extends uvm_subscriber#(trans);
     cg=new();
   endfunction
   
-  function void write(trans t1);
-    t=t1;
+  function void write(trans t);
+    t1=t;
     cg.sample();
   endfunction
   
