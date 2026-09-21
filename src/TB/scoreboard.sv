@@ -8,7 +8,7 @@ class scoreboard extends uvm_scoreboard;
   trans inp_mon_tx;
   trans out_mon_tx;
   
-  logic[`DATA_WIDTH-1:0]mem[`MEM_DEPTH];
+  bit[`DATA_WIDTH-1:0]mem[`MEM_DEPTH];
   bit wa_flag=1'b0;
   bit wd_flag=1'b0;
   bit[`ADDR_WIDTH-1:0]temp_addr;
@@ -89,12 +89,27 @@ class scoreboard extends uvm_scoreboard;
     
     //check read_response
     if(tin.RREADY && tin.RVALID)begin
-      
-      if(tin.RDATA == tout.RDATA)
+
+      if(tin.RDATA == tout.RDATA)begin
+        $display("\n------ RDATA DEBUG ------");
+        $display("Expected RDATA = %h", tin.RDATA);
+        $display("Actual   RDATA = %h", tout.RDATA);
+        $display("Expected RRESP = %b", tin.RRESP);
+        $display("Actual   RRESP = %b", tout.RRESP);
+        $display("ARADDR         = %h", tin.ARADDR);
+        $display("-------------------------");
         $display("\n RDATA IS  MATCHING");
-      else
+      end
+      else begin
+        $display("\n------ RDATA DEBUG ------");
+        $display("Expected RDATA = %h", tin.RDATA);
+        $display("Actual   RDATA = %h", tout.RDATA);
+        $display("Expected RRESP = %b", tin.RRESP);
+        $display("Actual   RRESP = %b", tout.RRESP);
+        $display("ARADDR         = %h", tin.ARADDR);
+        $display("-------------------------");
         $display("\n RDATA IS NOT MATCHING");
-      
+      end
       if(tin.RRESP == tout.RRESP)
         $display("\n RRESP IS  MATCHING");
       else
@@ -189,21 +204,11 @@ class scoreboard extends uvm_scoreboard;
         else begin
           t.RRESP=2'b00;
           t.RDATA=mem[t.ARADDR[5:2]];
+          $display("hello=%0b",t.RDATA);
         end
         
         t.RVALID=1'b1;
         
-      end
-    
-      //no operation
-      else begin
-        t.AWREADY=1'b0;
-        t.WREADY =1'b0;
-        t.BVALID =1'b0;
-      
-        t.ARREADY=1'b0;
-        t.RVALID =1'b0;
-
       end
     
     end
