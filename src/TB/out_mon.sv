@@ -1,19 +1,20 @@
 class out_mon extends uvm_monitor;
   
   `uvm_component_utils(out_mon)
-  uvm_analysis_port #(trans) out_mon_port;
   
+  uvm_analysis_port #(trans) out_mon_port;
+
   virtual axi4_if.OUT_MON vif;
   axi4_cfg c_h;
-  
+
   trans t;
   
   function new(string name="out_mon",uvm_component parent);
     super.new(name,parent);
   endfunction
   
-  function void built_phase(uvm_phase phase);
-    super.built_phase(phase);
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
     if(!uvm_config_db#(axi4_cfg)::get(this,"","axi4_cfg",c_h))
       `uvm_fatal("config fail","-------------->out_mon config fail");
     out_mon_port=new("out_mon_port",this);
@@ -25,29 +26,32 @@ class out_mon extends uvm_monitor;
   endfunction
   
   task run_phase(uvm_phase  phase);
+    @(vif.out_mon_cb);
     forever begin
       collect_out();
-      `uvm_info("out_mon",$sformatf("output monitor:\n%s",t.sprint()),UVM_FULL);
+      `uvm_info("out_mon",$sformatf("output monitor:\n%s",t.sprint()),UVM_LOW);
     end
   endtask
   
   virtual task collect_out();
     
-    repeat(3)@(vif.out_mon_cb);
+    repeat(1)@(vif.out_mon_cb);
     
     t=trans::type_id::create("t");
-    
     t.AWREADY = vif.out_mon_cb.AWREADY;
+
     t.WREADY  = vif.out_mon_cb.WREADY;
+
     t.BRESP   = vif.out_mon_cb.BRESP;
     t.BVALID  = vif.out_mon_cb.BVALID;
     
     t.ARREADY = vif.out_mon_cb.ARREADY;
+
     t.RDATA   = vif.out_mon_cb.RDATA;
     t.RRESP   = vif.out_mon_cb.RRESP;
     t.RVALID  = vif.out_mon_cb.RVALID;
     
     out_mon_port.write(t);
-    
+
   endtask
 endclass
