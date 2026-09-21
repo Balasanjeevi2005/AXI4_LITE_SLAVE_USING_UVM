@@ -110,8 +110,8 @@ class scoreboard extends uvm_scoreboard;
     
   endtask   
   virtual task expected_output(trans t);
-    
-    if(!t.PRESETn)begin
+
+    if(!t.ARESETn)begin
       foreach (mem[i])
         mem[i] ={`DATA_WIDTH{1'b0}};
 
