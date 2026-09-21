@@ -1,4 +1,3 @@
-`include "defines.sv"
 class subscriber extends uvm_subscriber#(trans);
   
   `uvm_component_utils(subscriber)
@@ -49,9 +48,9 @@ class subscriber extends uvm_subscriber#(trans);
       bins low ={0};
       bins high={1};
     }
-
+    
     //RESP
-    BRESP:coverpoint t1.BREADY{
+    BRESP:coverpoint t1.BREADY{ 
       bins OKAY  ={2'b00};
       bins SLVERR={2'b10};
       bins DECERR={2'b11};
@@ -65,7 +64,7 @@ class subscriber extends uvm_subscriber#(trans);
       bins other =default;
     }
     
-    W_addr_data:cross AWVALID,WVALID;
+    //W_addr_data:cross AWVALID,WVALID;
     
   endgroup
   
@@ -75,8 +74,10 @@ class subscriber extends uvm_subscriber#(trans);
   endfunction
   
   function void write(trans t);
-    t1=t;
+    $cast(t1,t);
     cg.sample();
   endfunction
   
 endclass
+
+//need to add resp
