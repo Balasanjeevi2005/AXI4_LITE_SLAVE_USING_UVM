@@ -15,6 +15,7 @@ class w_seq extends uvm_sequence#(trans);
       assert(req.randomize()with{
         !(AWADDR[7:0] inside{[8'h28:8'h30],[8'h40:8'hff]});
         AWADDR[1:0]==2'b00;
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
         AWVALID==1'b1;
         WVALID ==1'b1;
         BREADY ==1'b1;
@@ -46,6 +47,7 @@ class r_seq extends uvm_sequence#(trans,trans);
         r==1;
         w==0;
         ARADDR[1:0]==2'b00;
+        ARADDR[`ADDR_WIDTH-1:8]== '0;
         ARVALID==1'b1;
         //RVALID ==1'b1;
         RREADY ==1'b1;
@@ -75,6 +77,8 @@ class wr_seq extends uvm_sequence#(trans);
       assert(req.randomize()with{ 
         w==1;
         r==1;
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        ARADDR[`ADDR_WIDTH-1:8]== '0;
         AWVALID==1'b1;
         WVALID ==1'b1;
         BREADY ==1'b1;
@@ -108,11 +112,12 @@ class direct_seq extends uvm_sequence#(trans);
         r==1;
         AWADDR[7:0] inside{[8'h00:8'h24],8'h3C};
         AWADDR[1:0]==2'b00;
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
         AWVALID==1'b1;
         WVALID ==1'b1;
         BREADY ==1'b1;
         
-        ARADDR[7:0]==AWADDR[7:0];
+        ARADDR==AWADDR;
         ARVALID==1'b1;
         //RVALID ==1'b1;
         RREADY ==1'b1;
@@ -140,6 +145,7 @@ class err_seq extends uvm_sequence#(trans);
         w==1;
         r==0;
         AWADDR[1:0]!=2'b00;
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
         AWVALID==1'b1;
         WVALID ==1'b1;
         BREADY ==1'b1;
@@ -156,6 +162,7 @@ class err_seq extends uvm_sequence#(trans);
       start_item(req);
       assert(req.randomize()with{
         !(AWADDR[7:0] inside{[8'h00:8'h3f]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
         w==1;
         r==0;
         a_d==2'b11;
@@ -174,6 +181,7 @@ class err_seq extends uvm_sequence#(trans);
       start_item(req);
       assert(req.randomize()with{
         AWADDR[7:0] inside{[8'h28:8'h30]};
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
         w==1;
         r==0;
         a_d==2'b11;
@@ -193,6 +201,7 @@ class err_seq extends uvm_sequence#(trans);
       start_item(req);
       assert(req.randomize()with{
         ARADDR[7:0] inside{[8'h34:8'h38]};
+        ARADDR[`ADDR_WIDTH-1:8]== '0;
         w==0;
         r==1;
         ARADDR[1:0]==2'b00;
@@ -225,6 +234,7 @@ class err_seq extends uvm_sequence#(trans);
         AWADDR[1:0] == 2'b00;
         AWADDR[7:0] inside {[8'h00:8'h27],
                             [8'h31:8'h3F]};
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
       });
 
     finish_item(req);
@@ -248,6 +258,7 @@ class err_seq extends uvm_sequence#(trans);
         AWADDR[1:0] == 2'b00;
         AWADDR[7:0] inside {[8'h00:8'h27],
                             [8'h31:8'h3F]};
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
       });
 
     finish_item(req);
@@ -262,6 +273,7 @@ class err_seq extends uvm_sequence#(trans);
     endfunction
   
     task body();
+
       //W_BOTH -> W_IDLE
       // Step 1: Enter W_BOTH
       req = trans::type_id::create("req");
@@ -273,6 +285,7 @@ class err_seq extends uvm_sequence#(trans);
         w == 0;
         r == 0;
         AWADDR[1:0] == 2'b00;
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
         AWVALID == 1'b0;
         WVALID  == 1'b0;
         BREADY  == 1'b0;
@@ -309,6 +322,7 @@ class err_seq extends uvm_sequence#(trans);
       assert(req.randomize() with {
         !(AWADDR[7:0] inside {[8'h28:8'h30],
                             [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
         w == 1;
         r == 0;
         a_d == 2'b10;
@@ -387,6 +401,7 @@ class err_seq extends uvm_sequence#(trans);
       assert(req.randomize() with {
         !(AWADDR[7:0] inside {[8'h28:8'h30],
                             [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
         w == 1;
         r == 0;
         a_d == 2'b10;
@@ -416,10 +431,10 @@ class err_seq extends uvm_sequence#(trans);
 
       finish_item(req);
       
-      
+   
 
- /*     // cross coverage of awvalid,wvalid
-      repeat(20)begin
+   // cross coverage of awvalid,wvalid
+      repeat(50)begin
       // AWVALID = 1, WVALID = 0
       req = trans::type_id::create("req");
 
@@ -427,6 +442,7 @@ class err_seq extends uvm_sequence#(trans);
       assert(req.randomize() with {
         !(AWADDR[7:0] inside{[8'h28:8'h30],[8'h40:8'hff]});
         AWADDR[1:0]==2'b00;
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
         AWVALID==1'b1;
         WVALID ==1'b0;
 
@@ -461,6 +477,7 @@ class err_seq extends uvm_sequence#(trans);
       assert(req.randomize() with {
         !(AWADDR[7:0] inside{[8'h28:8'h30],[8'h40:8'hff]});
         AWADDR[1:0]==2'b00;
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
         AWVALID==1'b0;
         WVALID ==1'b0;
 
@@ -469,7 +486,354 @@ class err_seq extends uvm_sequence#(trans);
         RREADY  == 1'b0;
       });
       finish_item(req);
+      
+      //non toggle rdata
+      req = trans::type_id::create("req");
+
+      start_item(req);
+      assert(req.randomize() with {
+        !(AWADDR[7:0] inside{[8'h28:8'h30],[8'h40:8'hff]});
+        AWADDR[1:0]==2'b00;
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        AWVALID==1'b1;
+        WVALID ==1'b1;
+        WDATA == 32'h0050_0200;
+        BREADY  == 1'b1;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+      finish_item(req);
     end
-  */
-  endtask 
+    
+    //extra for addr to idle
+    repeat(10)begin
+    // Step 3: Try W_IDLE -> W_BOTH
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        ARESETn==1;
+      });
+
+      finish_item(req);
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        !(AWADDR[7:0] inside {[8'h28:8'h30],
+                            [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '1;
+        w == 1;
+        r == 0;
+        a_d == 2'b10;
+        AWADDR[1:0] == 2'b00;
+        AWVALID == 1'b1;
+        WVALID  == 1'b0;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+
+      finish_item(req);
+      // Step 2: Try W_ADDR -> W_IDLE
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        ARESETn==0;
+      });
+
+      finish_item(req);
+    // Step 3: Try W_IDLE -> W_BOTH
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        ARESETn==1;
+      });
+
+      finish_item(req);
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        !(AWADDR[7:0] inside {[8'h28:8'h30],
+                            [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        w == 1;
+        r == 0;
+        a_d == 2'b10;
+        AWADDR[1:0] == 2'b00;
+        AWVALID == 1'b1;
+        WVALID  == 1'b0;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+
+      finish_item(req);
+      // Step 2: Try W_ADDR -> W_IDLE
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        ARESETn==0;
+      });
+
+      finish_item(req);
+    end
+    //EXTRA RDATA & PROT
+    repeat(2)begin
+    req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        !(AWADDR[7:0] inside {[8'h28:8'h30],
+                            [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        w == 1;
+        r == 0;
+        a_d == 2'b11;
+        AWADDR[1:0] == 2'b00;
+        AWVALID == 1'b1;
+        WDATA[3] == 1'b1;
+        WVALID  == 1'b1;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+
+      finish_item(req);
+    //READ
+    req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        !(AWADDR[7:0] inside {[8'h28:8'h30],
+                            [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        w == 1;
+        r == 1;
+        a_d == 2'b11;
+        AWADDR[1:0] == 2'b00;
+        AWVALID == 1'b1;
+        ARADDR == AWADDR;
+        WDATA[3] == 1'b1;
+        WVALID  == 1'b1;
+        BREADY  == 1'b1;
+        ARVALID == 1'b1;
+        RREADY  == 1'b1;
+      });
+
+      finish_item(req);
+    //RDATA =0
+    //READ
+    req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        !(AWADDR[7:0] inside {[8'h28:8'h30],
+                            [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        w == 1;
+        r == 1;
+        a_d == 2'b11;
+        AWADDR[1:0] == 2'b00;
+        AWVALID == 1'b1;
+        ARADDR == AWADDR;
+        WDATA[3] == 1'b0;
+        WVALID  == 1'b1;
+        BREADY  == 1'b1;
+        ARVALID == 1'b1;
+        RREADY  == 1'b1;
+      });
+
+      finish_item(req);
+    req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        !(AWADDR[7:0] inside {[8'h28:8'h30],
+                            [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        w == 1;
+        r == 1;
+        a_d == 2'b11;
+        AWADDR[1:0] == 2'b00;
+        AWVALID == 1'b1;
+        ARADDR == AWADDR;
+        WDATA[3] == 1'b1;
+        WVALID  == 1'b1;
+        BREADY  == 1'b1;
+        ARVALID == 1'b1;
+        RREADY  == 1'b1;
+      });
+
+      finish_item(req);
+    req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        !(AWADDR[7:0] inside {[8'h28:8'h30],
+                            [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        w == 1;
+        r == 1;
+        a_d == 2'b11;
+        AWADDR[1:0] == 2'b00;
+        AWVALID == 1'b1;
+        ARADDR == AWADDR;
+        WDATA[3] == 1'b0;
+        WVALID  == 1'b1;
+        BREADY  == 1'b1;
+        ARVALID == 1'b1;
+        RREADY  == 1'b1;
+      });
+
+      finish_item(req);
+    //prot =111 to 000
+    req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        !(AWADDR[7:0] inside {[8'h28:8'h30],
+                            [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        w == 1;
+        r == 0;
+        a_d == 2'b11;
+        AWADDR[1:0] == 2'b00;
+        AWPROT == 3'b111;
+        AWVALID == 1'b1;
+        WDATA[3] == 1'b0;
+        WVALID  == 1'b1;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+
+      finish_item(req);
+    //READ
+    req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        !(AWADDR[7:0] inside {[8'h28:8'h30],
+                            [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        w == 1;
+        r == 0;
+        a_d == 2'b11;
+        AWADDR[1:0] == 2'b00;
+        AWVALID == 1'b1;
+        WDATA[3] == 1'b1;
+        WVALID  == 1'b1;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+
+      finish_item(req);
+
+    //WRITE
+    req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        !(AWADDR[7:0] inside {[8'h28:8'h30],
+                            [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        w == 1;
+        r == 0;
+        a_d == 2'b11;
+        AWADDR[1:0] == 2'b00;
+        AWPROT == 3'b000;
+        AWVALID == 1'b1;
+        WDATA[3] == 1'b1;
+        WVALID  == 1'b1;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+
+      finish_item(req);
+    //READ
+    req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        !(AWADDR[7:0] inside {[8'h28:8'h30],
+                            [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        w == 1;
+        r == 0;
+        a_d == 2'b11;
+        AWADDR[1:0] == 2'b00;
+        AWVALID == 1'b1;
+        WDATA[3] == 1'b1;
+        WVALID  == 1'b1;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+
+      finish_item(req);
+    end
+
+
+//INCRESING COVERAGE
+      // Step 1: Try W_IDLE 
+      repeat(50)begin
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        ARESETn==1'b0;
+      });
+
+      finish_item(req);
+     
+      // Step 2: Try W_IDLE -> W_BOTH
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        ARESETn==1;
+        !(AWADDR[7:0] inside {[8'h28:8'h30],
+                            [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        w == 1;
+        r == 0;
+        a_d == 2'b01;
+        AWADDR[1:0] == 2'b00;
+        AWVALID == 1'b0;
+        WVALID  == 1'b1;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+
+      finish_item(req);
+
+      // Step 3: Try W_BOTH -> W_ADDR
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        ARESETn==1;
+        !(AWADDR[7:0] inside {[8'h28:8'h30],
+                            [8'h40:8'hff]});
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        w == 1;
+        r == 0;
+        a_d == 2'b10;
+        AWADDR[1:0] == 2'b00;
+        AWVALID == 1'b0;
+        WVALID  == 1'b1;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+   end
+   endtask
 endclass
