@@ -9,11 +9,11 @@ class out_agnt extends uvm_agent;
     super.new(name,parent);
   endfunction
   
-  function void built_phase(uvm_phase phase);
-    super.built_phase(phase);
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
     if(!uvm_config_db#(axi4_cfg)::get(this,"","axi4_cfg",c_h))
       `uvm_fatal("config fail","-------------->out_agent config fail");
-    if(c_h.out_mon_is_passive==UVM_PASSIVE)
+    if(c_h.out_agnt_is_passive==UVM_PASSIVE)
       om_h=out_mon::type_id::create("om_h",this);
   endfunction
   
