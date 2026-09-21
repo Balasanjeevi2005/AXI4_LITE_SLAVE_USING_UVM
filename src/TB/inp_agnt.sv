@@ -11,24 +11,22 @@ class inp_agnt extends uvm_agent;
     super.new(name,parent);
   endfunction
   
-  function void built_phase(uvm_phase phase);
-    super.built_phase(phase);
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
     if(!uvm_config_db#(axi4_cfg)::get(this,"","axi4_cfg",c_h))
       `uvm_fatal("config fail","-------------->inp_agent config fail");
     im_h=inp_mon::type_id::create("im_h",this);
-    if(c_h.input_agent_is_active==UVM_ACTIVE)
+    if(c_h.inp_agnt_is_active==UVM_ACTIVE)
       begin
         id_h=inp_drv::type_id::create("id_h",this);
         sr_h=sequencer::type_id::create("sr_h",this);
       end
   endfunction
   
-  function void connnect_phase(uvm_phase phase);
+  function void connect_phase(uvm_phase phase);
     super.connect_phase(phase);
-    if(m_cfg.input_agent_is_active==UVM_ACTIVE)
-    begin
+    if(c_h.inp_agnt_is_active==UVM_ACTIVE)
       id_h.seq_item_port.connect(sr_h.seq_item_export);
-    end
   endfunction
   
 endclass
