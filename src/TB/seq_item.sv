@@ -1,5 +1,7 @@
 class trans extends uvm_sequence_item;
-  `uvm_object_utils(trans)
+  
+  bit ARESETn;
+
   rand bit[`ADDR_WIDTH-1:0]AWADDR;
   rand bit AWVALID;
   logic AWREADY;
@@ -24,27 +26,37 @@ class trans extends uvm_sequence_item;
   
   rand bit[2:0]AWPROT;
   rand bit[2:0]ARPROT;
+
+  rand bit w;
+  rand bit r;
+  rand bit[1:0]a_d;
+ 
   localparam bit [`DATA_WIDTH-1:0]DW_MAX={`DATA_WIDTH{1'b1}};
-  constraint c0{AWADDR[1:0]dist{2'b00:=10,[2'b01:2'b11]:=1}};
-  constraint c1{AWADDR[7:0]dist{[8'h00:8'h3F]:=10,[8'h40:8'hFF]:=1}};
   
-  constraint c2{ARADDR[1:0]dist{2'b00:=10,[2'b01:2'b11]:=1}};
-  constraint c3{ARADDR[7:0]dist{[8'h00:8'h3F]:=10,[8'h4F:8'hFF]:=1}};
+  constraint c0{AWADDR[1:0]dist{2'b00:=10,[2'b01:2'b11]:=1};}
+  constraint c1{AWADDR[7:0]dist{[8'h00:8'h3F]:=10,[8'h40:8'hFF]:=1};}
   
-  constraint c4{AWVALID dist{1:=15,0:=1}};
-  constraint c5{ARVALID dist{1:=15,0:=1}};
-  constraint c6{WVALID dist{1:=15,0:=1}};
+  constraint c2{ARADDR[1:0]dist{2'b00:=10,[2'b01:2'b11]:=1};}
+  constraint c3{ARADDR[7:0]dist{[8'h00:8'h3F]:=10,[8'h4F:8'hFF]:=1};}
   
-  constraint c7{WDATA inside{[0:DW_MAX]}};
-  constraint c8{WSTRB dist{4'b1111:=10,[4'b0000:4'b1110]:=1}};
+  constraint c4{AWVALID dist{1:=15,0:=1};}
+  constraint c5{ARVALID dist{1:=15,0:=1};}
+  constraint c6{WVALID dist{1:=15,0:=1};}
   
-  constraint c9{BREADY dist{1:=15,0:=1}};//dout if 0 what happen
-  constraint c10{RREADY dist{1:=15,0:=1}};//dout if 0 what happen
+  constraint c7{WDATA inside{[0:DW_MAX]};}
+  constraint c8{WSTRB dist{4'b1111:=10,[4'b0000:4'b1110]:=1};}
   
+  constraint c9{BREADY dist{1:=15,0:=1};}//dout if 0 what happen
+  constraint c10{RREADY dist{1:=15,0:=1};}//dout if 0 what happen
   
+  //added constraint
+  constraint c11{w dist{1:=1,0:=1};}
+  constraint c12{r dist{1:=1,0:=1};}
+  constraint c13{a_d dist{[2'b01:2'b11]:=1};}
 
   `uvm_object_utils_begin(trans)
-  
+
+  `uvm_field_int(ARESETn,UVM_ALL_ON)
   `uvm_field_int(AWADDR,UVM_ALL_ON)
   `uvm_field_int(AWVALID,UVM_ALL_ON)
   `uvm_field_int(AWREADY,UVM_ALL_ON)
