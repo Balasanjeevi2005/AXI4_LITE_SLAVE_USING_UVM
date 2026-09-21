@@ -45,7 +45,7 @@ class test1 extends test;
   err_seq e1;
   direct_seq d1;
   fsm_seq f1;
-  
+  //cov_seq c1;
   function new(string name="test1",uvm_component parent);
     super.new(name,parent); 
   endfunction
@@ -82,6 +82,10 @@ class test1 extends test;
        f1=fsm_seq::type_id::create("f1");
        f1.start(e_h.inp_agnt_h.sr_h);
       end
+      /*begin
+       c1=cov_seq::type_id::create("c1");
+       c1.start(e_h.inp_agnt_h.sr_h);
+      end*/
     join
     phase.phase_done.set_drain_time(this,20);
     phase.drop_objection(this);
