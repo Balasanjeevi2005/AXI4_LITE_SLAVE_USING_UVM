@@ -1,3 +1,173 @@
+//cover OPERATION
+class cov_addr extends uvm_sequence#(trans);
+  `uvm_object_utils(cov_addr)
+   
+  //trans res;
+  function new(string name="cov_addr");
+    super.new(name);
+  endfunction
+  
+  task body();
+      //INCRESING COVERAGE
+      // Step 1: Try W_IDLE 
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        //ARESETn == 1'b0;
+        w == 0;
+        r == 0;
+        a_d == 2'b00;
+        AWVALID == 1'b0;
+        WVALID  == 1'b0;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+
+      finish_item(req);
+     
+      // Step 2: Try W_IDLE -> W_BOTH
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        //ARESETn == 1'b1;
+        w == 0;
+        r == 0;
+        a_d == 2'b00;
+        AWVALID == 1'b0;
+        WVALID  == 1'b0;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+
+      finish_item(req);
+
+      // Step 3: Try W_BOTH -> W_ADDR
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        w == 1;
+        r == 0;
+        a_d == 2'b01;
+        AWVALID == 1'b0;
+        WVALID  == 1'b1;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+      finish_item(req);
+      
+      repeat(5)begin
+      // Step 3: Try W_BOTH -> W_ADDR
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        w == 1;
+        r == 0;
+        a_d == 2'b01;
+        AWVALID == 1'b0;
+        WVALID  == 1'b1;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+      finish_item(req);
+   end
+  endtask 
+endclass
+//cover OPERATION
+class cov_data extends uvm_sequence#(trans);
+  `uvm_object_utils(cov_data)
+   
+  //trans res;
+  function new(string name="cov_data");
+    super.new(name);
+  endfunction
+  
+  task body();
+      //INCRESING COVERAGE
+      // Step 1: Try W_IDLE 
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        //ARESETn == 1'b0;
+        w == 0;
+        r == 0;
+        a_d == 2'b00;
+        AWVALID == 1'b0;
+        WVALID  == 1'b0;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+
+      finish_item(req);
+     
+      // Step 2: Try W_IDLE -> W_BOTH
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        //ARESETn == 1'b1;
+        w == 0;
+        r == 0;
+        a_d == 2'b00;
+        AWVALID == 1'b0;
+        WVALID  == 1'b0;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+
+      finish_item(req);
+
+      // Step 3: Try W_BOTH -> W_ADDR
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        w == 1;
+        r == 0;
+        a_d == 2'b10;
+        !(AWADDR[7:0] inside{[8'h28:8'h30],[8'h40:8'hff]});
+        AWADDR[1:0]==2'b00;
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        AWVALID == 1'b1;
+        WVALID  == 1'b0;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+      finish_item(req);
+      
+      repeat(5)begin
+      // Step 3: Try W_BOTH -> W_ADDR
+      req = trans::type_id::create("req");
+      start_item(req);
+
+      assert(req.randomize() with {
+        w == 1;
+        r == 0;
+        a_d == 2'b10;
+        !(AWADDR[7:0] inside{[8'h28:8'h30],[8'h40:8'hff]});
+        AWADDR[1:0]==2'b00;
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        AWVALID == 1'b1;
+        WVALID  == 1'b0;
+        BREADY  == 1'b0;
+        ARVALID == 1'b0;
+        RREADY  == 1'b0;
+      });
+      finish_item(req);
+   end
+  endtask 
+endclass
 //WRITE OPERATION
 class w_seq extends uvm_sequence#(trans);
   `uvm_object_utils(w_seq)
@@ -778,62 +948,29 @@ class err_seq extends uvm_sequence#(trans);
       });
 
       finish_item(req);
+
+   //line coverage
+   //write to RO region(SLVERR)
+    repeat(5)begin
+      req=trans::type_id::create("req");
+      start_item(req);
+      assert(req.randomize()with{
+        AWADDR[7:0] inside{[8'h28:8'h30]};
+        AWADDR[`ADDR_WIDTH-1:8]== '0;
+        w==1;
+        r==0;
+        a_d==2'b11;
+        AWADDR[1:0]==2'b00;
+        AWVALID==1'b1;
+        WVALID ==1'b1;
+        BREADY ==1'b1;
+        ARVALID==1'b0;
+        //RVALID ==1'b0;
+        RREADY ==1'b0;
+      });
+      finish_item(req);
     end
 
-
-//INCRESING COVERAGE
-      // Step 1: Try W_IDLE 
-      repeat(50)begin
-      req = trans::type_id::create("req");
-      start_item(req);
-
-      assert(req.randomize() with {
-        ARESETn==1'b0;
-      });
-
-      finish_item(req);
-     
-      // Step 2: Try W_IDLE -> W_BOTH
-      req = trans::type_id::create("req");
-      start_item(req);
-
-      assert(req.randomize() with {
-        ARESETn==1;
-        !(AWADDR[7:0] inside {[8'h28:8'h30],
-                            [8'h40:8'hff]});
-        AWADDR[`ADDR_WIDTH-1:8]== '0;
-        w == 1;
-        r == 0;
-        a_d == 2'b01;
-        AWADDR[1:0] == 2'b00;
-        AWVALID == 1'b0;
-        WVALID  == 1'b1;
-        BREADY  == 1'b0;
-        ARVALID == 1'b0;
-        RREADY  == 1'b0;
-      });
-
-      finish_item(req);
-
-      // Step 3: Try W_BOTH -> W_ADDR
-      req = trans::type_id::create("req");
-      start_item(req);
-
-      assert(req.randomize() with {
-        ARESETn==1;
-        !(AWADDR[7:0] inside {[8'h28:8'h30],
-                            [8'h40:8'hff]});
-        AWADDR[`ADDR_WIDTH-1:8]== '0;
-        w == 1;
-        r == 0;
-        a_d == 2'b10;
-        AWADDR[1:0] == 2'b00;
-        AWVALID == 1'b0;
-        WVALID  == 1'b1;
-        BREADY  == 1'b0;
-        ARVALID == 1'b0;
-        RREADY  == 1'b0;
-      });
    end
    endtask
 endclass
