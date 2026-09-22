@@ -38,6 +38,8 @@ class test1 extends test;
   
   `uvm_component_utils(test1)
   
+  cov_addr c1;
+  cov_data c2;
   w_seq w1;
   r_seq r1;
   wr_seq wr1;
@@ -45,7 +47,6 @@ class test1 extends test;
   err_seq e1;
   direct_seq d1;
   fsm_seq f1;
-  //cov_seq c1;
   function new(string name="test1",uvm_component parent);
     super.new(name,parent); 
   endfunction
@@ -57,7 +58,17 @@ class test1 extends test;
   task run_phase(uvm_phase phase);
     
     phase.raise_objection(this);
-    fork 
+      
+      
+      begin
+       c1=cov_addr::type_id::create("c1");
+       c1.start(e_h.inp_agnt_h.sr_h);
+      end
+      begin
+       c2=cov_data::type_id::create("c2");
+       c2.start(e_h.inp_agnt_h.sr_h);
+      end
+    fork
       begin
         w1=w_seq::type_id::create("w1");
         w1.start(e_h.inp_agnt_h.sr_h);
@@ -82,10 +93,6 @@ class test1 extends test;
        f1=fsm_seq::type_id::create("f1");
        f1.start(e_h.inp_agnt_h.sr_h);
       end
-      /*begin
-       c1=cov_seq::type_id::create("c1");
-       c1.start(e_h.inp_agnt_h.sr_h);
-      end*/
     join
     phase.phase_done.set_drain_time(this,20);
     phase.drop_objection(this);
