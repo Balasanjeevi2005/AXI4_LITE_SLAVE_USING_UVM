@@ -51,7 +51,22 @@ import test_pkg::*;
    end
    
    initial begin
+     //w_addr -> w_idle
+     @(posedge ACLK);
      ARESETn=0;
+     repeat(1)@(posedge ACLK);
+     ARESETn=1;
+     repeat(5)@(posedge ACLK);
+     ARESETn=0;
+     repeat(3)@(posedge ACLK);
+     //w_data -> w_idle
+     @(posedge ACLK);
+     ARESETn=0;
+     repeat(1)@(posedge ACLK);
+     ARESETn=1;
+     repeat(5)@(posedge ACLK);
+     ARESETn=0;
+     repeat(3)@(posedge ACLK);
      #2 ARESETn=1;
      #10 ARESETn=0;
      repeat(2)@(posedge ACLK);
